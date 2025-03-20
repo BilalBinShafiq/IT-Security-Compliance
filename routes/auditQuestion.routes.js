@@ -1,23 +1,37 @@
+console.log("3️⃣ Loading auditQuestion.routes.js...");
+
 const express = require("express");
 const router = express.Router();
-const AuditQuestion = require("../models/auditQuestion.model");
+const auditQuestionController = require("../controllers/auditQuestion.controller");
 
-router.post("/", async (req, res) => {
-  try {
-    const question = await AuditQuestion.create(req.body);
-    res.status(201).json(question);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+// Create an audit question
+router.post("/", (req, res) => {
+  console.log("📌 Handling POST /api/audit-questions");
+  auditQuestionController.createAuditQuestion(req, res);
 });
 
-router.get("/", async (req, res) => {
-  try {
-    const questions = await AuditQuestion.find();
-    res.status(200).json(questions);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+// Get all audit questions
+router.get("/", (req, res) => {
+  console.log("📌 Handling GET /api/audit-questions");
+  auditQuestionController.getAllAuditQuestions(req, res);
+});
+
+// Get a single audit question by ID
+router.get("/:id", (req, res) => {
+  console.log(`📌 Handling GET /api/audit-questions/${req.params.id}`);
+  auditQuestionController.getAuditQuestion(req, res);
+});
+
+// Update an audit question
+router.put("/:id", (req, res) => {
+  console.log(`📌 Handling PUT /api/audit-questions/${req.params.id}`);
+  auditQuestionController.updateAuditQuestion(req, res);
+});
+
+// Delete an audit question
+router.delete("/:id", (req, res) => {
+  console.log(`📌 Handling DELETE /api/audit-questions/${req.params.id}`);
+  auditQuestionController.deleteAuditQuestion(req, res);
 });
 
 module.exports = router;

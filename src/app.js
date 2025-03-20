@@ -3,9 +3,9 @@ console.log("2️⃣ Loading app.js...");
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const controlPointRoutes = require("../routes/controlPoint.routes.js");
-const csfDocumentRoutes = require("../routes/csfDocument.routes.js");
-const auditQuestionRoutes = require("../routes/auditQuestion.routes.js");
+const controlPointRoutes = require("../routes/controlPoint.routes");
+const csfDocumentRoutes = require("../routes/csfDocument.routes");
+const auditQuestionRoutes = require("../routes/auditQuestion.routes");
 
 const app = express();
 
