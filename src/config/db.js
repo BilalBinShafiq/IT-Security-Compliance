@@ -18,13 +18,10 @@ const connectDB = async () => {
     const mongoURI =
       env === "production"
         ? `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}?retryWrites=true&w=majority`
-        : `mongodb://${DB_USER}:${DB_PASS}@${DB_HOST}/${DB_NAME}`;
+        : `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}/?retryWrites=true&w=majority&appName=${DB_NAME}`;
 
     // Connect to MongoDB
-    await mongoose.connect(mongoURI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(mongoURI);
 
     console.log(`✅ MongoDB Connected to ${env.toUpperCase()} Database`);
   } catch (error) {
