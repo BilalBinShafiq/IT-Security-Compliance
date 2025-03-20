@@ -1,8 +1,11 @@
+console.log("1️⃣ Loading server.js...");
+
 require("dotenv").config();
 const app = require("./app");
 const connectDB = require("./config/db");
 
-// ✅ Only call `connectDB()` here
+// Connect to database
+console.log("7️⃣ Connecting to MongoDB...");
 connectDB();
 
 const PORT = process.env.PORT || 5000;
