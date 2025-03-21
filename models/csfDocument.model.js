@@ -5,31 +5,21 @@ const mongoose = require("mongoose");
  */
 const CSFDocumentSchema = new mongoose.Schema(
   {
-    /**
-     * The human-readable name of the document.
-     * Example: "Security Policy Guidelines"
-     */
+    /* - Required Field
+     * - Must be a String.
+     * - The human-readable name of the document. */
     name: { type: String, required: true, trim: true },
-
-    /**
-     * The actual file name, if applicable.
-     * Example: "security_guidelines.pdf"
-     * Optional field.
-     */
+    /* - Required Field
+     * - Must be a String.
+     * - The human-readable name of the document. */
     fileName: { type: String, default: "", trim: true },
-
-    /**
-     * The URL or Confluence link to access the document.
-     * Example: "https://confluence.example.com/security-guidelines"
-     * Optional field.
-     */
-    url: { type: String, default: "", trim: true },
-
-    /**
-     * A longer description of the document’s content.
-     * Example: "This document outlines the security guidelines for the organization."
-     * Optional field.
-     */
+    /* - Optional Field
+     * - Must be a String.
+     * - The URL to access the document (for example, a Confluence link) */
+    confluenceLink: { type: String, default: "", trim: true },
+    /* - Optional Field
+     * - Must be a String.
+     * - A longer description of the document’s content */
     description: { type: String, default: "", trim: true },
   },
   { timestamps: true } // Adds "createdAt" and "updatedAt" timestamps automatically.

@@ -5,59 +5,57 @@ const mongoose = require("mongoose");
  */
 const AuditQuestionSchema = new mongoose.Schema(
   {
-    /**
-     * Reference to the associated control point.
-     * This establishes a relationship between the audit question and the corresponding control point.
-     */
+    /* - Required Field
+     * - Must be a Reference of ObjectId.
+     * - A reference to the associated control point document (from the controlPoints collection) */
     controlRef: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "ControlPoint",
       required: true,
     },
-
-    /**
-     * The identifier of the control point.
-     * Example values: "1.1", "3.1.1.4".
-     * This is provided when selecting the control point.
-     */
+    /* - Required Field
+     * - Must be a String.
+     * - The identifier of the control point
+     * - (This is provided to the user when selecting the control point)
+     * - Example Values:
+     *    - "1.1" */
     controlIdentifier: { type: String, required: true, trim: true },
-
-    /**
-     * The name of the control point this audit question is linked to.
-     * Example: "Information Security Policy".
-     */
+    /* - Required Field
+     * - Must be a String.
+     * - The name of the control
+     * - Example Values:
+     *    - "Information Security Policy" */
     controlName: { type: String, required: true, trim: true },
-
-    /**
-     * A unique identifier for the audit question.
-     * Example: "K01.001_P[1]".
-     * If the user does not provide one, the system will generate it automatically.
-     */
+    /* - Required Field
+     * - Must be a String.
+     * - A unique identifier for the audit question
+     * - If the user does not provide it, the system must generate one
+     * - Example Values:
+     *    - "K01.001_P[1]" */
     auditQuestionIdentifier: {
       type: String,
       required: true,
       unique: true,
       trim: true,
     },
-
-    /**
-     * The text of the audit question.
-     * Example: "How often is the organization-wide Information Security Policy reviewed and updated?"
-     */
+    /* - Required Field
+     * - Must be a String.
+     * - The description of the audit question
+     * - Example Values:
+     *    - "How often is the organization-wide Information Security Policy reviewed and updated?" */
     auditQuestion: { type: String, required: true, trim: true },
-
-    /**
-     * Instructions on how to properly evaluate the audit question.
-     * Example: "Ensure that the organization-wide frequency and scope of updates are documented in the IBSZ."
-     */
+    /* - Required Field
+     * - Must be a String.
+     * - The instructions necessary to fulfill the audit question
+     * - Example Values:
+     *    - "Ensure that the organization-wide frequency and scope of updates are documented in the IBSZ" */
     auditQuestionInstructions: { type: String, required: true, trim: true },
-
-    /**
-     * Specifies the type of audit question.
-     * Allowed values:
-     *  - "audit" (General audit questions)
-     *  - "GAP" (Gap analysis questions)
-     */
+    /* - Required Field
+     * - Must be a String.
+     * - Differentiates the type of question
+     * - This field allows later queries to separately retrieve audit and GAP questions
+     * - Possible Values:
+     *    - "audit" or "GAP" */
     questionType: {
       type: String,
       enum: ["audit", "GAP"],

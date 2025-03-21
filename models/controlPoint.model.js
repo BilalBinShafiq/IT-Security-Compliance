@@ -5,130 +5,105 @@ const mongoose = require("mongoose");
  */
 const ControlPointSchema = new mongoose.Schema(
   {
-    /**
-     * Hierarchical identifier of the control point (e.g., "1.1", "3.1.1.4").
-     */
+    /* - Required Field
+     * - Must be a String
+     * - Represents a unique hierarchical identifier
+     * - Example Values:
+     *    - "1.1"
+     *    - "3.1.1.4" */
     sectionNumber: { type: String, required: true, trim: true },
-
-    /**
-     * The name of the control point (e.g., "Information Security Policy").
-     */
+    /* - Required Field
+     * - Must be a String
+     * - The name of the control point.
+     * - Example Values:
+     *    - "Information Security Policy" */
     controlName: { type: String, required: true, trim: true },
-
-    /**
-     * Security classification of the control.
-     * Allowed values:
-     *  - "A"
-     *  - "J"
-     *  - "M"
-     *  - "none" (equivalent to "egyik sem")
-     */
+    /* - Required Field
+     * - Must be a String
+     * - Allowed values:
+     *    - "A", "J", "M", "none" */
     securityClass: {
       type: String,
       enum: ["A", "J", "M", "none"],
       required: true,
       trim: true,
     },
-
-    /**
-     * Detailed guidance and explanation of the control.
-     */
+    /* Required Field
+     * - Must be a String
+     * - A long text stored in a single field that contains both guidance and explanation. */
     guidanceExplanation: { type: String, required: true, trim: true },
-
-    /**
-     * Implementation steps as a multi-line text (stored as a single string).
-     */
+    /* - Required Field
+     * - Must be a String
+     * - A multi-line text field where each step is separated by line breaks */
     implementationSteps: { type: String, required: true, trim: true },
-
-    /**
-     * References to the Hungarian 41/2015 regulation.
-     * Example:
-     *  - ["3.1.1.1. Information Security Policy", "3.1.1.4 BYD Policy"]
-     * If no value exists, store ["no value"].
-     */
+    /* - Required Field
+     * - Must be an Array of Strings.
+     * - If there is no value, it may contain the element "no value".
+     * - Example Values:
+     *    - ["3.1.1.1. Information Security Policy", "3.1.1.4 BYD Policy"]. */
     ref41_2015: { type: [String], required: true, trim: true },
-
-    /**
-     * References to ISO 27001.
-     * Example:
-     *  - ["4.1", "4.2", "A.5.31"]
-     */
+    /* - Required Field
+     * - Must be an Array of Strings.
+     * - References to ISO 27001 compliance sections.
+     * - Example Values:
+     *    - ["4.1", "4.2", "A.5.31"]. */
     refISO27001: { type: [String], required: true, trim: true },
-
-    /**
-     * References to NIST SP 800.
-     * Example:
-     *  - ["PM1"]
-     */
+    /* - Required Field
+     * - Must be an Array of Strings.
+     * - References to NIST SP 800 compliance sections.
+     * - Example Values:
+     *    - ["PM1"]. */
     refNIST800: { type: [String], required: true, trim: true },
-
-    /**
-     * Free-text requirement parameters related to the control.
-     * Optional field.
-     */
+    /* - Optional Field
+     * - Must be a String
+     * - Free text to specify parameters related to the control. */
     requirementParameters: { type: String, default: "", trim: true },
-
-    /**
-     * Related security measures.
-     * Each object contains:
-     *  - sectionNumber (string) → e.g., "5.14"
-     *  - name (string) → e.g., "Continuous Monitoring"
-     */
+    /* - Required Field
+     * - Must be an array of Objects.
+     * - Each element contains the section number and name of the related security measure.
+     * - Example Values:
+     *    - { "sectionNumber": "5.14", "name": "Continuous Monitoring" } */
     relatedSecurityMeasures: [
       {
         sectionNumber: { type: String, required: true, trim: true },
         name: { type: String, required: true, trim: true },
       },
     ],
-
-    /**
-     * Type of the control.
-     * Allowed values:
-     *  - "SZ"
-     *  - "EIR"
-     */
+    /* - Required Field
+     * - Must be a String
+     * - Allowed values:
+     *    - "SZ" or "EIR". */
     type: { type: String, enum: ["SZ", "EIR"], required: true, trim: true },
-
-    /**
-     * Evaluation types - Specifies how the control is evaluated.
-     * Example values:
-     *  - ["Document", "Test", "Interview", "Other", "none"]
-     */
+    /* - Required Field
+     * - Must be aa Array of Strings.
+     * - Allowed values:
+     *    -  "Document", "Test", "Interview", "Other", "none". */
     evaluationTypes: { type: [String], required: true, trim: true },
-
-    /**
-     * Type of control:
-     * Allowed values:
-     *  - "Assuring"
-     *  - "Enabling"
-     */
+    /* - Required Field
+     * - Must be aa Array of Strings.
+     * - Allowed values:
+     *  - "Assuring" (Ensures security measures are effective)
+     *  - "Enabling" (Supports security operations) */
     controlType: {
       type: String,
       enum: ["Assuring", "Enabling"],
       required: true,
       trim: true,
     },
-
-    /**
-     * Whether the control is non-excludable from evaluation.
-     * Allowed values:
-     *  - "I" (Mandatory for evaluation)
-     *  - "N" (Not mandatory)
-     */
+    /* - Required Field
+     * - (If the value is "I", then that control cannot be excluded from evaluation, meaning it is mandatory to check.)
+     * - Allowed values:
+     *    - "I", "N" */
     nonExcludableFromEvaluation: {
       type: String,
       enum: ["I", "N"],
       required: true,
       trim: true,
     },
-
-    /**
-     * References to CSF documents.
-     * These documents are stored in the "csfDocuments" collection.
-     */
-    csfDocuments: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "CSFDocument" },
-    ],
+    /* - Optional Field
+     * - array of ObjectId.
+     * - An array of ObjectId references to CSF Documents stored in the "csfDocuments" collection. */ csfDocuments:
+      [{ type: mongoose.Schema.Types.ObjectId, ref: "CSFDocument" }],
   },
   { timestamps: true } // Adds "createdAt" and "updatedAt" timestamps automatically.
 );
