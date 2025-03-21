@@ -3,7 +3,7 @@ console.log("3️⃣ Loading csfDocument.routes.js...");
 const express = require("express");
 const router = express.Router();
 const csfDocumentController = require("../controllers/csfDocument.controller");
-const validateObjectId = require("../src/utils/validateObjectId");
+const validateObjectId = require("../src/utils/validateObjectId.util");
 
 // Create a CSF document
 router.post("/", (req, res) => {

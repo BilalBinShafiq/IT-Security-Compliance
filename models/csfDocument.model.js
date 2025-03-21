@@ -1,22 +1,23 @@
 const mongoose = require("mongoose");
 
-/**
- * CSFDocument Schema - Represents documents related to the Cybersecurity Framework (CSF).
- */
+// CSFDocument Schema - This collection stores documents related to the CSF
 const CSFDocumentSchema = new mongoose.Schema(
   {
     /* - Required Field
      * - Must be a String.
      * - The human-readable name of the document. */
     name: { type: String, required: true, trim: true },
+
     /* - Required Field
      * - Must be a String.
      * - The human-readable name of the document. */
     fileName: { type: String, default: "", trim: true },
+
     /* - Optional Field
      * - Must be a String.
      * - The URL to access the document (for example, a Confluence link) */
     confluenceLink: { type: String, default: "", trim: true },
+
     /* - Optional Field
      * - Must be a String.
      * - A longer description of the document’s content */

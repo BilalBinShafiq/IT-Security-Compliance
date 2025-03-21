@@ -3,7 +3,7 @@ console.log("3️⃣ Loading controlPoint.routes.js...");
 const express = require("express");
 const router = express.Router();
 const controlPointController = require("../controllers/controlPoint.controller");
-const validateObjectId = require("../src/utils/validateObjectId");
+const validateObjectId = require("../src/utils/validateObjectId.util");
 
 router.post("/", (req, res) => {
   console.log("📌 Handling POST /api/control-points");

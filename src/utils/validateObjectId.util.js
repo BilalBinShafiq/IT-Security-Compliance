@@ -4,9 +4,7 @@ const mongoose = require("mongoose");
  * 🔹 Validates if a given ID is a valid MongoDB ObjectId.
  * - If invalid, sends a 400 response with an error message.
  * - If valid, proceeds to the next middleware/controller.
- *
- * @param {string} paramName - The name of the parameter (e.g., "CSF Document ID").
- */
+ * @param {string} paramName - The name of the parameter (e.g., "CSF Document ID") */
 const validateObjectId =
   (paramName = "Resource ID") =>
   (req, res, next) => {

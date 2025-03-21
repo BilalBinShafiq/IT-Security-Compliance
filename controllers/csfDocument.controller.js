@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
 const CSFDocument = require("../models/csfDocument.model");
 
-/**
- * 🔹 Create a new CSF document
- * - Validates required fields before saving.
- */
+/* Create a new CSF document
+ * - Validates required fields before saving */
 exports.createCSFDocument = async (req, res) => {
   try {
     const { name, fileName, confluenceLink, description } = req.body;
@@ -28,10 +26,8 @@ exports.createCSFDocument = async (req, res) => {
   }
 };
 
-/**
- * 🔹 Get all CSF documents
- * - Returns a list of all CSF documents.
- */
+/* Get all CSF documents
+ * - Returns a list of all CSF documents */
 exports.getAllCSFDocuments = async (req, res) => {
   try {
     const csfDocuments = await CSFDocument.find();
@@ -41,9 +37,7 @@ exports.getAllCSFDocuments = async (req, res) => {
   }
 };
 
-/**
- * 🔹 Get a single CSF document by ID
- */
+/* Get a single CSF document by ID */
 exports.getCSFDocument = async (req, res) => {
   try {
     const csfDocument = await CSFDocument.findById(req.params.id);
@@ -57,10 +51,8 @@ exports.getCSFDocument = async (req, res) => {
   }
 };
 
-/**
- * 🔹 Update a CSF document by ID
- * - Returns the updated document.
- */
+/* Update a CSF document by ID
+ * - Returns the updated document */
 exports.updateCSFDocument = async (req, res) => {
   try {
     const csfDocument = await CSFDocument.findByIdAndUpdate(
@@ -79,9 +71,7 @@ exports.updateCSFDocument = async (req, res) => {
   }
 };
 
-/**
- * 🔹 Delete a CSF document by ID
- */
+/* Delete a CSF document by ID */
 exports.deleteCSFDocument = async (req, res) => {
   try {
     const csfDocument = await CSFDocument.findByIdAndDelete(req.params.id);

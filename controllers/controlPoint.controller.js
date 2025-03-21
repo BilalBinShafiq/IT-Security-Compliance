@@ -1,56 +1,24 @@
 const mongoose = require("mongoose");
 const ControlPoint = require("../models/controlPoint.model");
 
-/**
- * 🔹 Create a new control point
- */
+// Create a new control point
 exports.createControlPoint = async (req, res) => {
   try {
-    const {
-      sectionNumber,
-      controlName,
-      securityClass,
-      type,
-      controlType,
-      nonExcludableFromEvaluation,
-    } = req.body;
-
-    // Validate all required fields
-    if (
-      !sectionNumber ||
-      !controlName ||
-      !securityClass ||
-      !type ||
-      !controlType ||
-      !nonExcludableFromEvaluation
-    ) {
-      return res.status(400).json({
-        success: false,
-        message:
-          "Missing required fields: sectionNumber, controlName, securityClass, type, controlType, nonExcludableFromEvaluation.",
-      });
-    }
-
-    // Check if control point already exists with the same sectionNumber
-    const existingControl = await ControlPoint.findOne({ sectionNumber });
-    if (existingControl) {
-      return res.status(409).json({
-        success: false,
-        message: "A control point with this sectionNumber already exists.",
-      });
+    // Validate input data
+    const validationError = await validateControlPointData(req.body);
+    if (validationError) {
+      return res.status(400).json(validationError);
     }
 
     // Create a new control point
     const controlPoint = await ControlPoint.create(req.body);
-    res.status(201).json({ success: true, data: controlPoint });
+    return res.status(201).json({ success: true, data: controlPoint });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    return res.status(500).json({ success: false, error: error.message });
   }
 };
 
-/**
- * 🔹 Get all control points (with pagination & sorting)
- */
+// Get all control points (with pagination & sorting)
 exports.getAllControlPoints = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1; // Default page = 1
@@ -76,9 +44,7 @@ exports.getAllControlPoints = async (req, res) => {
   }
 };
 
-/**
- * 🔹 Get a single control point by ID
- */
+// Get a single control point by ID
 exports.getControlPoint = async (req, res) => {
   try {
     const { id } = req.params;
@@ -103,48 +69,37 @@ exports.getControlPoint = async (req, res) => {
   }
 };
 
-/**
- * 🔹 Update a control point
- */
+// Update a control point
 exports.updateControlPoint = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Validate ObjectId format
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid ID format." });
+    // Validate update data
+    const validationError = validateControlPointUpdate(id, req.body);
+    if (validationError) {
+      return res.status(400).json(validationError);
     }
 
-    // Prevent updating _id or sectionNumber
-    if (req.body.sectionNumber || req.body._id) {
-      return res.status(400).json({
-        success: false,
-        message: "sectionNumber and _id cannot be updated.",
-      });
-    }
-
+    // Perform the update
     const controlPoint = await ControlPoint.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
     });
 
     if (!controlPoint) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Control Point not found." });
+      return res.status(404).json({
+        success: false,
+        message: "Control Point not found.",
+      });
     }
 
-    res.status(200).json({ success: true, data: controlPoint });
+    return res.status(200).json({ success: true, data: controlPoint });
   } catch (error) {
-    res.status(400).json({ success: false, error: error.message });
+    return res.status(500).json({ success: false, error: error.message });
   }
 };
 
-/**
- * 🔹 Delete a control point
- */
+// Delete a control point
 exports.deleteControlPoint = async (req, res) => {
   try {
     const { id } = req.params;

@@ -2,17 +2,15 @@ const mongoose = require("mongoose");
 const AuditQuestion = require("../models/auditQuestion.model");
 const ControlPoint = require("../models/controlPoint.model");
 
-/**
- * 🔹 Create a new audit question.
+/* Create a new audit question.
  * - Validates the referenced control point.
  * - Automatically generates `auditQuestionIdentifier` if missing.
- * - Handles errors for better debugging.
- */
+ * - Handles errors for better debugging */
 exports.createAuditQuestion = async (req, res) => {
   try {
     const { controlRef, auditQuestionIdentifier } = req.body;
 
-    // 🔹 Validate controlRef (Ensure the control point exists)
+    // Validate controlRef (Ensure the control point exists)
     if (!mongoose.Types.ObjectId.isValid(controlRef)) {
       return res.status(400).json({ error: "Invalid controlRef format." });
     }
@@ -25,7 +23,7 @@ exports.createAuditQuestion = async (req, res) => {
       });
     }
 
-    // 🔹 Auto-generate `auditQuestionIdentifier` if missing
+    // Auto-generate `auditQuestionIdentifier` if missing
     if (!auditQuestionIdentifier) {
       const count = await AuditQuestion.countDocuments();
       req.body.auditQuestionIdentifier = `K01.${(count + 1)
@@ -33,7 +31,7 @@ exports.createAuditQuestion = async (req, res) => {
         .padStart(3, "0")}_P[1]`;
     }
 
-    // 🔹 Create the audit question
+    // Create the audit question
     const auditQuestion = await AuditQuestion.create(req.body);
     res.status(201).json(auditQuestion);
   } catch (error) {
@@ -47,10 +45,8 @@ exports.createAuditQuestion = async (req, res) => {
   }
 };
 
-/**
- * 🔹 Get all audit questions.
- * - Uses `.lean()` for better performance.
- */
+/* Get all audit questions.
+ * - Uses `.lean()` for better performance */
 exports.getAllAuditQuestions = async (req, res) => {
   try {
     const auditQuestions = await AuditQuestion.find().lean();
@@ -60,18 +56,10 @@ exports.getAllAuditQuestions = async (req, res) => {
   }
 };
 
-/**
- * 🔹 Get a single audit question by ID.
- * - Validates MongoDB ObjectId format before querying.
- */
+/* Get a single audit question by ID.
+ * - Validates MongoDB ObjectId format before querying */
 exports.getAuditQuestion = async (req, res) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid auditQuestion ID format." });
-    }
-
     const auditQuestion = await AuditQuestion.findById(req.params.id).lean();
     if (!auditQuestion) {
       return res.status(404).json({ message: "Audit Question not found" });
@@ -82,19 +70,11 @@ exports.getAuditQuestion = async (req, res) => {
   }
 };
 
-/**
- * 🔹 Update an audit question.
+/* Update an audit question.
  * - Ensures the audit question exists before updating.
- * - Uses `{ runValidators: true }` to enforce schema validation.
- */
+ * - Uses `{ runValidators: true }` to enforce schema validation */
 exports.updateAuditQuestion = async (req, res) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid auditQuestion ID format." });
-    }
-
     const auditQuestion = await AuditQuestion.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -110,18 +90,10 @@ exports.updateAuditQuestion = async (req, res) => {
   }
 };
 
-/**
- * 🔹 Delete an audit question.
- * - Validates the MongoDB ObjectId format before deleting.
- */
+/* Delete an audit question.
+ * - Validates the MongoDB ObjectId format before deleting */
 exports.deleteAuditQuestion = async (req, res) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-      return res
-        .status(400)
-        .json({ error: "Invalid auditQuestion ID format." });
-    }
-
     const auditQuestion = await AuditQuestion.findByIdAndDelete(req.params.id);
     if (!auditQuestion) {
       return res.status(404).json({ message: "Audit Question not found" });

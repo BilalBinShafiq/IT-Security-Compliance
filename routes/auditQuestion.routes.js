@@ -3,7 +3,7 @@ console.log("3️⃣ Loading auditQuestion.routes.js...");
 const express = require("express");
 const router = express.Router();
 const auditQuestionController = require("../controllers/auditQuestion.controller");
-const validateObjectId = require("../src/utils/validateObjectId");
+const validateObjectId = require("../src/utils/validateObjectId.util");
 
 // Create an audit question
 router.post("/", (req, res) => {

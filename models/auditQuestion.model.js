@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 
-/**
- * AuditQuestion Schema - Represents audit questions linked to a control point.
- */
+// AuditQuestion Schema - This collection contains the audit questions. Each audit question is in a 1:1 relationship with a control point
 const AuditQuestionSchema = new mongoose.Schema(
   {
     /* - Required Field
@@ -13,6 +11,7 @@ const AuditQuestionSchema = new mongoose.Schema(
       ref: "ControlPoint",
       required: true,
     },
+
     /* - Required Field
      * - Must be a String.
      * - The identifier of the control point
@@ -20,12 +19,14 @@ const AuditQuestionSchema = new mongoose.Schema(
      * - Example Values:
      *    - "1.1" */
     controlIdentifier: { type: String, required: true, trim: true },
+
     /* - Required Field
      * - Must be a String.
      * - The name of the control
      * - Example Values:
      *    - "Information Security Policy" */
     controlName: { type: String, required: true, trim: true },
+
     /* - Required Field
      * - Must be a String.
      * - A unique identifier for the audit question
@@ -38,18 +39,21 @@ const AuditQuestionSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+
     /* - Required Field
      * - Must be a String.
      * - The description of the audit question
      * - Example Values:
      *    - "How often is the organization-wide Information Security Policy reviewed and updated?" */
     auditQuestion: { type: String, required: true, trim: true },
+
     /* - Required Field
      * - Must be a String.
      * - The instructions necessary to fulfill the audit question
      * - Example Values:
      *    - "Ensure that the organization-wide frequency and scope of updates are documented in the IBSZ" */
     auditQuestionInstructions: { type: String, required: true, trim: true },
+
     /* - Required Field
      * - Must be a String.
      * - Differentiates the type of question
@@ -66,10 +70,8 @@ const AuditQuestionSchema = new mongoose.Schema(
   { timestamps: true } // Automatically adds "createdAt" and "updatedAt" fields.
 );
 
-/**
- * Middleware: Generate a unique auditQuestionIdentifier if not provided by the user.
- * Format: "K01.XXX_P[1]", where XXX is a zero-padded counter.
- */
+/* Middleware: Generate a unique auditQuestionIdentifier if not provided by the user.
+ * Format: "K01.XXX_P[1]", where XXX is a zero-padded counter */
 AuditQuestionSchema.pre("save", async function (next) {
   if (!this.auditQuestionIdentifier) {
     const count = await this.constructor.countDocuments();
