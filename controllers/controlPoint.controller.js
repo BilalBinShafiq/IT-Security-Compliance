@@ -1,5 +1,11 @@
 const mongoose = require("mongoose");
 const ControlPoint = require("../models/controlPoint.model");
+const {
+  validateControlPointData,
+  validateControlPointUpdate,
+} = require("../src/utils/controlPointValidation.util");
+
+const { getSortingAndPagination } = require("../src/utils/queryHelper");
 
 // Create a new control point
 exports.createControlPoint = async (req, res) => {
@@ -11,7 +17,13 @@ exports.createControlPoint = async (req, res) => {
     }
 
     // Create a new control point
-    const controlPoint = await ControlPoint.create(req.body);
+    let controlPoint = await ControlPoint.create(req.body);
+
+    // Fetch the created control point with populated csfDocuments
+    controlPoint = await ControlPoint.findById(controlPoint._id).populate(
+      "csfDocuments"
+    );
+
     return res.status(201).json({ success: true, data: controlPoint });
   } catch (error) {
     return res.status(500).json({ success: false, error: error.message });
@@ -21,22 +33,25 @@ exports.createControlPoint = async (req, res) => {
 // Get all control points (with pagination & sorting)
 exports.getAllControlPoints = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Default page = 1
-    const limit = parseInt(req.query.limit) || 10; // Default limit = 10
+    const { sort, skip, limit, currentPage, pageSize } =
+      getSortingAndPagination(req.query);
 
-    const controlPoints = await ControlPoint.find()
-      .sort({ createdAt: -1 }) // Sort by newest first
-      .limit(limit)
-      .skip((page - 1) * limit)
-      .exec();
-
-    const count = await ControlPoint.countDocuments();
+    // Fetch documents with pagination and sorting
+    const [controlPoints, count] = await Promise.all([
+      ControlPoint.find()
+        .sort(sort)
+        .skip(skip)
+        .limit(limit)
+        .populate("csfDocuments")
+        .exec(),
+      ControlPoint.countDocuments(),
+    ]);
 
     res.status(200).json({
       success: true,
       total: count,
-      page,
-      pages: Math.ceil(count / limit),
+      page: currentPage,
+      pages: Math.ceil(count / pageSize),
       data: controlPoints,
     });
   } catch (error) {
@@ -81,7 +96,7 @@ exports.updateControlPoint = async (req, res) => {
     }
 
     // Perform the update
-    const controlPoint = await ControlPoint.findByIdAndUpdate(id, req.body, {
+    let controlPoint = await ControlPoint.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
     });
@@ -92,6 +107,11 @@ exports.updateControlPoint = async (req, res) => {
         message: "Control Point not found.",
       });
     }
+
+    // Fetch the created control point with populated csfDocuments
+    controlPoint = await ControlPoint.findById(controlPoint._id).populate(
+      "csfDocuments"
+    );
 
     return res.status(200).json({ success: true, data: controlPoint });
   } catch (error) {

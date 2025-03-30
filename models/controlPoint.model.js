@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const autopopulate = require("mongoose-autopopulate");
 
 // ControlPoint Schema - This collection stores the IT security compliance control points
 const ControlPointSchema = new mongoose.Schema(
@@ -113,9 +114,17 @@ const ControlPointSchema = new mongoose.Schema(
     },
 
     /* - Optional Field
-     * - array of ObjectId.
-     * - An array of ObjectId references to CSF Documents stored in the "csfDocuments" collection. */ csfDocuments:
-      [{ type: mongoose.Schema.Types.ObjectId, ref: "CSFDocument" }],
+     * - Array of ObjectId
+     * - An array of ObjectId references to CSF Documents stored in the "csfDocuments" collection
+     * - ✅ Autopopulate enabled on csfDocuments
+     */
+    csfDocuments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CSFDocument",
+        autopopulate: true,
+      },
+    ],
   },
   { timestamps: true } // Adds "createdAt" and "updatedAt" timestamps automatically.
 );

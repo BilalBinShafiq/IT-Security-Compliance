@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const AuditQuestion = require("../models/auditQuestion.model");
 const ControlPoint = require("../models/controlPoint.model");
+const { getSortingAndPagination } = require("../src/utils/queryHelper");
 
 /* Create a new audit question.
  * - Validates the referenced control point.
@@ -12,7 +13,7 @@ exports.createAuditQuestion = async (req, res) => {
 
     // Validate controlRef (Ensure the control point exists)
     if (!mongoose.Types.ObjectId.isValid(controlRef)) {
-      return res.status(400).json({ error: "Invalid controlRef format." });
+      return res.status(400).json({ error: "Invalid controlRef" });
     }
 
     const controlPointExists = await ControlPoint.findById(controlRef);
@@ -45,14 +46,27 @@ exports.createAuditQuestion = async (req, res) => {
   }
 };
 
-/* Get all audit questions.
- * - Uses `.lean()` for better performance */
+// Get all Audit Questions with sorting and pagination
 exports.getAllAuditQuestions = async (req, res) => {
   try {
-    const auditQuestions = await AuditQuestion.find().lean();
-    res.status(200).json(auditQuestions);
+    const { sort, skip, limit, currentPage, pageSize } =
+      getSortingAndPagination(req.query);
+
+    // Fetch audit questions with pagination and sorting
+    const [auditQuestions, count] = await Promise.all([
+      AuditQuestion.find().sort(sort).skip(skip).limit(limit).lean(),
+      AuditQuestion.countDocuments(),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      total: count,
+      page: currentPage,
+      pages: Math.ceil(count / pageSize),
+      data: auditQuestions,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ success: false, error: error.message });
   }
 };
 
@@ -96,9 +110,13 @@ exports.deleteAuditQuestion = async (req, res) => {
   try {
     const auditQuestion = await AuditQuestion.findByIdAndDelete(req.params.id);
     if (!auditQuestion) {
-      return res.status(404).json({ message: "Audit Question not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Audit Question not found" });
     }
-    res.status(200).json({ message: "Audit Question deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Audit Question deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

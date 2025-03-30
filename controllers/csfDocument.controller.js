@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const CSFDocument = require("../models/csfDocument.model");
+const { getSortingAndPagination } = require("../src/utils/queryHelper");
 
 /* Create a new CSF document
  * - Validates required fields before saving */
@@ -26,14 +27,27 @@ exports.createCSFDocument = async (req, res) => {
   }
 };
 
-/* Get all CSF documents
- * - Returns a list of all CSF documents */
+/* Get all CSF documents with sorting and pagination */
 exports.getAllCSFDocuments = async (req, res) => {
   try {
-    const csfDocuments = await CSFDocument.find();
-    res.status(200).json(csfDocuments);
+    const { sort, skip, limit, currentPage, pageSize } =
+      getSortingAndPagination(req.query);
+
+    // Fetch documents with pagination and sorting
+    const [csfDocuments, count] = await Promise.all([
+      CSFDocument.find().sort(sort).skip(skip).limit(limit).exec(),
+      CSFDocument.countDocuments(),
+    ]);
+
+    res.status(200).json({
+      success: true,
+      total: count,
+      page: currentPage,
+      pages: Math.ceil(count / pageSize),
+      data: csfDocuments,
+    });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(400).json({ success: false, error: error.message });
   }
 };
 
@@ -76,10 +90,14 @@ exports.deleteCSFDocument = async (req, res) => {
   try {
     const csfDocument = await CSFDocument.findByIdAndDelete(req.params.id);
     if (!csfDocument) {
-      return res.status(404).json({ message: "CSF Document not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "CSF Document not found" });
     }
 
-    res.status(200).json({ message: "CSF Document deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "CSF Document deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

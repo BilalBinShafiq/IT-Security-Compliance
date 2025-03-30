@@ -23,6 +23,9 @@ const connectDB = async () => {
         ? `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}?retryWrites=true&w=majority&appName=${DB_NAME}`
         : `mongodb+srv://${DB_USER}:${DB_PASS}@${DB_HOST}?retryWrites=true&w=majority&appName=${DB_NAME}`;
 
+    // console.log("Debugging:", { env, DB_HOST, DB_USER, DB_NAME });
+    // console.log("MongoURI:", mongoURI);
+
     // Connect to MongoDB
     await mongoose.connect(mongoURI);
 
