@@ -4,6 +4,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const controlPointRoutes = require("../routes/controlPoint.routes");
+const enumFieldsControlPointRoutes = require("../routes/enumFields.controlPoint.routes");
 const csfDocumentRoutes = require("../routes/csfDocument.routes");
 const auditQuestionRoutes = require("../routes/auditQuestion.routes");
 
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: true })); // Parse form data
 // Routes
 console.log("5️⃣ Loading routes...");
 app.use("/api/control-points", controlPointRoutes);
+app.use("/api/control-point-enum-fields", enumFieldsControlPointRoutes);
 app.use("/api/csf-documents", csfDocumentRoutes);
 app.use("/api/audit-questions", auditQuestionRoutes);
 

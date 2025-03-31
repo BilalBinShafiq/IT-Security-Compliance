@@ -5,7 +5,10 @@ const {
   validateControlPointUpdate,
 } = require("../src/utils/controlPointValidation.util");
 
-const { getSortingAndPagination } = require("../src/utils/queryHelper");
+const {
+  getSortingAndPagination,
+} = require("../src/utils/sortingAndPagination");
+const enumFields = require("../src/utils/enumFields.controlPoint");
 
 // Create a new control point
 exports.createControlPoint = async (req, res) => {
@@ -36,9 +39,34 @@ exports.getAllControlPoints = async (req, res) => {
     const { sort, skip, limit, currentPage, pageSize } =
       getSortingAndPagination(req.query);
 
-    // Fetch documents with pagination and sorting
+    // Get filter parameters from query
+    const { controlName, securityClass } = req.query;
+
+    // Build the query object
+    let query = {};
+
+    // Add controlName filter if provided (partial match)
+    if (controlName) {
+      query.controlName = { $regex: new RegExp(controlName, "i") }; // Case-insensitive search
+    }
+
+    // Add securityClass filter if provided (exact match)
+    if (securityClass) {
+      // Validate against allowed enum values
+      const validSecurityClasses = enumFields.securityClass;
+      if (!validSecurityClasses.includes(securityClass)) {
+        return res.status(400).json({
+          success: false,
+          error: `Invalid securityClass. Must be one of: 
+          ${validSecurityClasses.join(", ")}`,
+        });
+      }
+      query.securityClass = securityClass;
+    }
+
+    // Fetch audit questions with pagination, sorting, and filtering
     const [controlPoints, count] = await Promise.all([
-      ControlPoint.find()
+      ControlPoint.find(query)
         .sort(sort)
         .skip(skip)
         .limit(limit)

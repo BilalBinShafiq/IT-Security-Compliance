@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const CSFDocument = require("../models/csfDocument.model");
-const { getSortingAndPagination } = require("../src/utils/queryHelper");
+const {
+  getSortingAndPagination,
+} = require("../src/utils/sortingAndPagination");
 
 /* Create a new CSF document
  * - Validates required fields before saving */

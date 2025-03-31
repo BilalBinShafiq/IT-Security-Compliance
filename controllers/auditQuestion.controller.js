@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 const AuditQuestion = require("../models/auditQuestion.model");
 const ControlPoint = require("../models/controlPoint.model");
-const { getSortingAndPagination } = require("../src/utils/queryHelper");
+const {
+  getSortingAndPagination,
+} = require("../src/utils/sortingAndPagination");
 
 /* Create a new audit question.
  * - Validates the referenced control point.

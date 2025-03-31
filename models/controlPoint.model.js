@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const autopopulate = require("mongoose-autopopulate");
+const enumFields = require("../src/utils/enumFields.controlPoint");
 
 // ControlPoint Schema - This collection stores the IT security compliance control points
 const ControlPointSchema = new mongoose.Schema(
@@ -10,14 +11,22 @@ const ControlPointSchema = new mongoose.Schema(
      * - Example Values:
      *    - "1.1"
      *    - "3.1.1.4" */
-    sectionNumber: { type: String, required: true, trim: true },
+    sectionNumber: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be a String
      * - The name of the control point.
      * - Example Values:
      *    - "Information Security Policy" */
-    controlName: { type: String, required: true, trim: true },
+    controlName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be a String
@@ -25,7 +34,7 @@ const ControlPointSchema = new mongoose.Schema(
      *    - "A", "J", "M", "none" */
     securityClass: {
       type: String,
-      enum: ["A", "J", "M", "none"],
+      enum: enumFields.securityClass,
       required: true,
       trim: true,
     },
@@ -33,38 +42,62 @@ const ControlPointSchema = new mongoose.Schema(
     /* Required Field
      * - Must be a String
      * - A long text stored in a single field that contains both guidance and explanation. */
-    guidanceExplanation: { type: String, required: true, trim: true },
+    guidanceExplanation: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be a String
      * - A multi-line text field where each step is separated by line breaks */
-    implementationSteps: { type: String, required: true, trim: true },
+    implementationSteps: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be an Array of Strings.
      * - If there is no value, it may contain the element "no value".
      * - Example Values:
      *    - ["3.1.1.1. Information Security Policy", "3.1.1.4 BYD Policy"]. */
-    ref41_2015: { type: [String], required: true, trim: true },
+    ref41_2015: {
+      type: [String],
+      required: true,
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be an Array of Strings.
      * - References to ISO 27001 compliance sections.
      * - Example Values:
      *    - ["4.1", "4.2", "A.5.31"]. */
-    refISO27001: { type: [String], required: true, trim: true },
+    refISO27001: {
+      type: [String],
+      required: true,
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be an Array of Strings.
      * - References to NIST SP 800 compliance sections.
      * - Example Values:
      *    - ["PM1"]. */
-    refNIST800: { type: [String], required: true, trim: true },
+    refNIST800: {
+      type: [String],
+      required: true,
+      trim: true,
+    },
 
     /* - Optional Field
      * - Must be a String
      * - Free text to specify parameters related to the control. */
-    requirementParameters: { type: String, default: "", trim: true },
+    requirementParameters: {
+      type: String,
+      default: "",
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be an array of Objects.
@@ -73,8 +106,16 @@ const ControlPointSchema = new mongoose.Schema(
      *    - { "sectionNumber": "5.14", "name": "Continuous Monitoring" } */
     relatedSecurityMeasures: [
       {
-        sectionNumber: { type: String, required: true, trim: true },
-        name: { type: String, required: true, trim: true },
+        sectionNumber: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        name: {
+          type: String,
+          required: true,
+          trim: true,
+        },
       },
     ],
 
@@ -82,13 +123,22 @@ const ControlPointSchema = new mongoose.Schema(
      * - Must be a String
      * - Allowed values:
      *    - "SZ" or "EIR". */
-    type: { type: String, enum: ["SZ", "EIR"], required: true, trim: true },
+    type: {
+      type: String,
+      enum: enumFields.type,
+      required: true,
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be aa Array of Strings.
-     * - Allowed values:
+     * - Example Values:
      *    -  "Document", "Test", "Interview", "Other", "none". */
-    evaluationTypes: { type: [String], required: true, trim: true },
+    evaluationTypes: {
+      type: [String],
+      required: true,
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be aa Array of Strings.
@@ -97,7 +147,7 @@ const ControlPointSchema = new mongoose.Schema(
      *  - "Enabling" (Supports security operations) */
     controlType: {
       type: String,
-      enum: ["Assuring", "Enabling"],
+      enum: enumFields.controlType,
       required: true,
       trim: true,
     },
@@ -108,7 +158,7 @@ const ControlPointSchema = new mongoose.Schema(
      *    - "I", "N" */
     nonExcludableFromEvaluation: {
       type: String,
-      enum: ["I", "N"],
+      enum: enumFields.nonExcludableFromEvaluation,
       required: true,
       trim: true,
     },
