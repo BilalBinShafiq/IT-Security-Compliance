@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const enumFields = require("../src/utils/enumFields.auditQuestion");
 
 // AuditQuestion Schema - This collection contains the audit questions. Each audit question is in a 1:1 relationship with a control point
 const AuditQuestionSchema = new mongoose.Schema(
@@ -18,14 +19,22 @@ const AuditQuestionSchema = new mongoose.Schema(
      * - (This is provided to the user when selecting the control point)
      * - Example Values:
      *    - "1.1" */
-    controlIdentifier: { type: String, required: true, trim: true },
+    controlIdentifier: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be a String.
      * - The name of the control
      * - Example Values:
      *    - "Information Security Policy" */
-    controlName: { type: String, required: true, trim: true },
+    controlName: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be a String.
@@ -45,14 +54,22 @@ const AuditQuestionSchema = new mongoose.Schema(
      * - The description of the audit question
      * - Example Values:
      *    - "How often is the organization-wide Information Security Policy reviewed and updated?" */
-    auditQuestion: { type: String, required: true, trim: true },
+    auditQuestion: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be a String.
      * - The instructions necessary to fulfill the audit question
      * - Example Values:
      *    - "Ensure that the organization-wide frequency and scope of updates are documented in the IBSZ" */
-    auditQuestionInstructions: { type: String, required: true, trim: true },
+    auditQuestionInstructions: {
+      type: String,
+      required: true,
+      trim: true,
+    },
 
     /* - Required Field
      * - Must be a String.
@@ -62,7 +79,7 @@ const AuditQuestionSchema = new mongoose.Schema(
      *    - "audit" or "GAP" */
     questionType: {
       type: String,
-      enum: ["audit", "GAP"],
+      enum: enumFields.questionType,
       required: true,
       trim: true,
     },

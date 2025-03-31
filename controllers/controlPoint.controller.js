@@ -8,7 +8,7 @@ const {
 const {
   getSortingAndPagination,
 } = require("../src/utils/sortingAndPagination");
-const enumFields = require("../src/utils/enumFields.controlPoint");
+const enumFieldsControlPoint = require("../src/utils/enumFields.controlPoint");
 
 // Create a new control point
 exports.createControlPoint = async (req, res) => {
@@ -53,7 +53,7 @@ exports.getAllControlPoints = async (req, res) => {
     // Add securityClass filter if provided (exact match)
     if (securityClass) {
       // Validate against allowed enum values
-      const validSecurityClasses = enumFields.securityClass;
+      const validSecurityClasses = enumFieldsControlPoint.securityClass;
       if (!validSecurityClasses.includes(securityClass)) {
         return res.status(400).json({
           success: false,

@@ -4,6 +4,7 @@ const ControlPoint = require("../models/controlPoint.model");
 const {
   getSortingAndPagination,
 } = require("../src/utils/sortingAndPagination");
+const enumFieldsAuditQuestion = require("../src/utils/enumFields.auditQuestion");
 
 /* Create a new audit question.
  * - Validates the referenced control point.
@@ -54,9 +55,34 @@ exports.getAllAuditQuestions = async (req, res) => {
     const { sort, skip, limit, currentPage, pageSize } =
       getSortingAndPagination(req.query);
 
+    // Get filter parameters from query
+    const { auditQuestion, questionType } = req.query;
+
+    // Build the query object
+    let query = {};
+
+    // Add auditQuestion filter if provided (partial match)
+    if (auditQuestion) {
+      query.auditQuestion = { $regex: new RegExp(auditQuestion, "i") }; // Case-insensitive search
+    }
+
+    // Add questionType filter if provided (exact match)
+    if (questionType) {
+      // Validate against allowed enum values
+      const validQuestionType = enumFieldsAuditQuestion.questionType;
+      if (!validQuestionType.includes(questionType)) {
+        return res.status(400).json({
+          success: false,
+          error: `Invalid Question Type. Must be one of: 
+                ${validQuestionType.join(", ")}`,
+        });
+      }
+      query.questionType = questionType;
+    }
+
     // Fetch audit questions with pagination and sorting
     const [auditQuestions, count] = await Promise.all([
-      AuditQuestion.find().sort(sort).skip(skip).limit(limit).lean(),
+      AuditQuestion.find(query).sort(sort).skip(skip).limit(limit).lean(),
       AuditQuestion.countDocuments(),
     ]);
 

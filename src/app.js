@@ -7,6 +7,7 @@ const controlPointRoutes = require("../routes/controlPoint.routes");
 const enumFieldsControlPointRoutes = require("../routes/enumFields.controlPoint.routes");
 const csfDocumentRoutes = require("../routes/csfDocument.routes");
 const auditQuestionRoutes = require("../routes/auditQuestion.routes");
+const enumFieldsAuditQuestionRoutes = require("../routes/enumFields.auditQuestion.routes");
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api/control-points", controlPointRoutes);
 app.use("/api/control-point-enum-fields", enumFieldsControlPointRoutes);
 app.use("/api/csf-documents", csfDocumentRoutes);
 app.use("/api/audit-questions", auditQuestionRoutes);
+app.use("/api/audit-question-enum-fields", enumFieldsAuditQuestionRoutes);
 
 // Health Check Route
 app.get("/", (req, res) => {
