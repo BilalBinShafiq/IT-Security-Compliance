@@ -146,7 +146,7 @@ const ControlPointSchema = new mongoose.Schema(
      *  - "Assuring" (Ensures security measures are effective)
      *  - "Enabling" (Supports security operations) */
     controlType: {
-      type: String,
+      type: [String],
       enum: enumFields.controlType,
       required: true,
       trim: true,
